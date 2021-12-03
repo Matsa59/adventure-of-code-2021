@@ -1,0 +1,57 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# AoC - Dive - Day 2
+
+## Part 1
+
+```elixir
+defmodule Dive do
+  def move({"forward", value}, {x, y}), do: {x + value, y}
+  def move({"up", value}, {x, y}), do: {x, y - value}
+  def move({"down", value}, {x, y}), do: {x, y + value}
+
+  def prepare_action(value) do
+    [direction, y] = String.split(value, " ")
+    {direction, String.to_integer(y)}
+  end
+end
+
+{x, y} =
+  File.read!("./data/dive.txt")
+  |> String.split("\n", trim: true)
+  |> Enum.map(&Dive.prepare_action/1)
+  |> Enum.reduce({0, 0}, &Dive.move/2)
+
+x * y
+```
+
+```output
+1383564
+```
+
+## Part 2
+
+```elixir
+defmodule Dive do
+  def move({"up", value}, {x, y, aim}), do: {x, y, aim - value}
+  def move({"down", value}, {x, y, aim}), do: {x, y, aim + value}
+  def move({"forward", value}, {x, y, aim}), do: {x + value, y + value * aim, aim}
+
+  def prepare_action(value) do
+    [direction, y] = String.split(value, " ")
+    {direction, String.to_integer(y)}
+  end
+end
+
+{x, y, _} =
+  File.read!("./data/dive.txt")
+  |> String.split("\n", trim: true)
+  |> Enum.map(&Dive.prepare_action/1)
+  |> Enum.reduce({0, 0, 0}, &Dive.move/2)
+
+x * y
+```
+
+```output
+1488311643
+```
